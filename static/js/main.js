@@ -14,7 +14,7 @@ const currentStateDisplay = document.getElementById('current-state');
 let simulationInterval;
 const SIMULATION_SPEED_MS = 150;
 // Alamat server Python Anda
-const API_URL = 'http://127.0.0.1:5000/validate'; 
+const API_URL = '/validate';
 
 // --- 3. Tambahkan Event Listeners ---
 form.addEventListener('submit', (e) => {
