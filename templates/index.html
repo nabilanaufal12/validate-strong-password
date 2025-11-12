@@ -8,36 +8,72 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>Simulasi Mesin Turing</h1>
-        <h2>Validator Strong Password</h2>
-
-        <form id="validator-form">
-            <label for="password-input">Masukkan Password:</label>
-            <input type="text" id="password-input" placeholder="Contoh: P@ssw0rd!" required>
-            <button type="submit" id="run-button">Validasi</button>
-            <button type="button" id="reset-button">Reset</button>
-        </form>
-
-        <div class="simulation-area">
-            <h3>Visualisasi Pita (Tape)</h3>
-            <div id="tape-container">
-                </div>
-            
-            <div class="status-panel">
-                <p>Status Saat Ini: <strong id="current-state">-</strong></p>
-                <div id="result-display">
-                    </div>
-            </div>
-
-            <h3>Jejak Eksekusi (Trace)</h3>
-            <div id="trace-log">
-                <pre id="trace-output">Menunggu input...</pre>
-            </div>
+    <div class="group-container">
+        <button class="group-button" id="group-toggle-button">Anggota Kelompok</button>
+        <div class="group-list hide" id="group-list-panel">
+            <span>2401020073 - Nabil</span><br><br>
+            <span>2401020057 - Rauf Hidayat</span><br><br>
+            <span>2401020045 - Raga Tapa Dhijaya</span><br><br>
+            <span>2401020082 - Muhammad Fathir</span><br><br>
+            <span>2401020058 - Muhammad Rahman Afriadi</span><br><br>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}" type="module" defer></script>
+    <div class="container">
+        <header class="header">
+            <h1>Simulasi Mesin Turing</h1>
+            <h2>Validator Strong Password</h2>
+        </header>
+
+        <div class="main-content">
+
+            <div class="column column-left">
+                
+                <form id="validator-form">
+                    <label for="password-input">Masukkan Password:</label>
+                    <input type="text" id="password-input" placeholder="Contoh: P@ssw0rd!" required>
+                    <button type="submit" id="run-button">Validasi</button>
+                    <button type="button" id="reset-button">Reset</button>
+                </form>
+
+                <div class="requirements">
+                    <h3>Syarat Strong Password</h3>
+                    <ul>
+                        <li>Minimal 8 karakter.</li>
+                        <li>Minimal 1 huruf kecil (a-z).</li>
+                        <li>Minimal 1 huruf besar (A-Z).</li>
+                        <li>Minimal 1 angka (0-9).</li>
+                        <li>Minimal 1 simbol (!@#$%^&*).</li>
+                    </ul>
+                </div>
+                
+                <div class="trace-log-container">
+                    <h3>Jejak Eksekusi (Trace)</h3>
+                    <div id="trace-log">
+                        <pre id="trace-output">Menunggu input...</pre>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="column column-right">
+                
+                <h3>Visualisasi Pita (Tape)</h3>
+                <div class="simulation-area">
+                    <div id="tape-container">
+                        </div>
+                </div>
+
+                <h3>Status</h3>
+                <div class="status-panel">
+                    <p>Status Saat Ini: <strong id="current-state">-</strong></p>
+                    <div id="result-display">
+                        </div>
+                </div>
+
+            </div>
+            
+        </div> </div> <script src="{{ url_for('static', filename='js/main.js') }}" type="module" defer></script>
 
 </body>
 </html>

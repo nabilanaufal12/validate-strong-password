@@ -10,11 +10,14 @@ const traceOutput = document.getElementById('trace-output');
 const resultDisplay = document.getElementById('result-display');
 const currentStateDisplay = document.getElementById('current-state');
 
+// BARU: Referensi untuk Panel Kelompok
+const groupButton = document.getElementById('group-toggle-button');
+const groupPanel = document.getElementById('group-list-panel');
+
 // --- 2. Variabel Global ---
 let simulationInterval;
 const SIMULATION_SPEED_MS = 150;
-// Alamat server Python Anda
-const API_URL = '/validate';
+const API_URL = '/validate'; // Path relatif untuk PythonAnywhere
 
 // --- 3. Tambahkan Event Listeners ---
 form.addEventListener('submit', (e) => {
@@ -22,6 +25,11 @@ form.addEventListener('submit', (e) => {
     runSimulation();
 });
 resetButton.addEventListener('click', resetUI);
+
+// BARU: Event listener untuk tombol kelompok
+groupButton.addEventListener('click', () => {
+    groupPanel.classList.toggle('hide');
+});
 
 // Helper 'sleep' untuk animasi
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -54,7 +62,7 @@ async function runSimulation() {
         // 2. Dapatkan hasil simulasi LENGKAP dari server
         const result = await response.json();
         
-        // 3. Animasikan hasil (seperti di laporan kating [cite: 952-971])
+        // 3. Animasikan hasil
         traceOutput.textContent = ''; // Bersihkan log
         for (const step of result.trace) {
             updateStepUI(step);
@@ -121,7 +129,9 @@ function resetUI() {
     resultDisplay.style.display = 'none';
     runButton.disabled = false;
     input.disabled = false;
-    input.value = '';
+    // JANGAN reset input value di sini, agar user bisa lihat apa yg diinput
+    // input.value = ''; 
 }
 
+// Inisialisasi UI saat halaman dimuat
 resetUI();
