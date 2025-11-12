@@ -1,277 +1,312 @@
-/* --- Global & Font --- */
+/* 1. Global Reset & Setup Font */
+:root {
+    --color-primary: #007bff;
+    --color-primary-dark: #0056b3;
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-background: #f4f7f6;
+    --color-card-bg: #ffffff;
+    --color-text: #333;
+    --color-text-muted: #666;
+    --color-border: #e0e0e0;
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --border-radius: 8px;
+    --gap: 24px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-    background: linear-gradient(to bottom right, #f4f7f6, #e8ecf1);
-    min-height: 100vh;
-}
-
-/* --- Kontainer Utama --- */
-.container {
-    max-width: 1200px; /* Lebih lebar untuk 2 kolom */
-    width: 100%;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
-    padding: 30px 40px;
-}
-
-/* --- Header --- */
-.header {
-    text-align: center;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-}
-.header h1 {
-    color: #1a2533;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     margin: 0;
-}
-.header h2 {
-    margin: 5px 0 0;
-    color: #555;
-    font-weight: 400;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
 }
 
-/* --- Tata Letak 2 Kolom --- */
-.main-content {
-    display: flex;
-    gap: 40px;
-}
-.column {
-    flex: 1;
-}
-.column-left {
-    flex-basis: 45%;
-}
-.column-right {
-    flex-basis: 55%;
-    position: sticky; /* Membuat kolom kanan "mengambang" */
-    top: 20px;
-    align-self: flex-start; /* Mencegah peregangan */
+h1, h2 {
+    margin-top: 0;
+    font-weight: 600;
 }
 
-/* --- Form Input --- */
-#validator-form {
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 8px;
+}
+
+pre {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.9rem;
+}
+
+/* 2. Header Aplikasi */
+.app-header {
+    background-color: var(--color-card-bg);
+    padding: 20px var(--gap);
+    box-shadow: var(--shadow-soft);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* 3. Struktur Tata Letak Utama (Grid) */
+.layout-container {
+    display: grid;
+    /* Kolom kiri 2 bagian, kolom kanan 1 bagian */
+    grid-template-columns: 2fr 1fr;
+    /* Sejajarkan item di bagian atas */
+    align-items: start;
+    gap: var(--gap);
+    padding: var(--gap);
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* 4. Kolom (Kiri & Kanan) */
+.content-column {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+
+    /* KEAJAIBAN STICKY DI SINI! */
+    position: sticky;
+    /* Menempel 24px dari atas viewport */
+    top: var(--gap);
+}
+
+/* 5. Komponen "Card" Modern */
+.card {
+    background-color: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    padding: 20px;
+    border: 1px solid var(--color-border);
+}
+
+/* 6. Styling Elemen Spesifik */
+
+/* Form Input */
+#tm-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+#tm-form .input-group {
+    display: flex;
     gap: 10px;
-    margin-bottom: 30px;
 }
-#validator-form label {
-    flex-basis: 100%;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-#password-input {
+
+#tm-form input[type="text"] {
     flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    padding: 10px 14px;
     font-size: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
-#run-button, #reset-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+
+#tm-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.button-primary {
+    padding: 10px 20px;
     font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
     transition: background-color 0.2s;
 }
-#run-button {
-    background-color: #007bff;
-}
-#run-button:hover {
-    background-color: #0056b3;
-}
-#reset-button {
-    background-color: #6c757d;
-}
-#reset-button:hover {
-    background-color: #5a6268;
+
+.button-primary:hover {
+    background-color: var(--color-primary-dark);
 }
 
-/* --- Box Syarat Password --- */
-.requirements {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 15px 25px;
-    margin-bottom: 30px;
-}
-.requirements h3 {
-    border-bottom: none;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    text-align: left;
-    font-size: 1.1em;
-}
-.requirements ul {
-    padding-left: 0;
-    list-style: none;
+/* Daftar Syarat Password */
+#password-rules {
+    padding-left: 20px;
     margin: 0;
-}
-.requirements li {
-    margin-bottom: 8px;
-    padding-left: 25px;
-    position: relative;
-    font-size: 0.95em;
-}
-.requirements li::before {
-    content: '✓';
-    color: #28a745;
-    position: absolute;
-    left: 0;
-    font-size: 1.1em;
-    font-weight: bold;
+    color: var(--color-text-muted);
 }
 
-/* --- Area Simulasi (Kolom Kanan) --- */
-.simulation-area {
-    margin-top: 10px;
-    background-color: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
+#password-rules li {
+    margin-bottom: 8px;
+}
+
+/* Jejak Eksekusi (Log) */
+#log-content {
+    background-color: #fdfdfd;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 16px;
+
+    /* Ini penting: buat log bisa di-scroll secara internal */
+    max-height: 600px;
+    overflow-y: auto;
+
+    white-space: pre-wrap; /* Agar baris tidak terlalu panjang */
+    word-break: break-all;
+}
+
+/* Visualisasi Pita */
+#tape-visualization {
+    overflow-x: auto; /* Izinkan scroll horizontal jika pita terlalu panjang */
+    padding: 10px 0;
 }
 #tape-container {
     display: flex;
-    overflow-x: auto;
-    min-height: 60px;
-    padding: 5px;
+    gap: 2px;
 }
+
 .tape-cell {
-    min-width: 50px;
-    height: 50px;
-    border: 1px solid #ccc;
+    min-width: 40px;
+    height: 40px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 1.5em;
-    font-family: 'Courier New', Courier, monospace;
+    justify-content: center;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 1.2rem;
     font-weight: bold;
-    background-color: #fff;
-    flex-shrink: 0;
-}
-.tape-cell.head {
-    background-color: #fff8c4;
-    border: 2px solid #f0b400;
-    position: relative;
-}
-.tape-cell.head::after {
-    content: '▼';
-    position: absolute;
-    bottom: -20px;
-    font-size: 1.2em;
-    color: #f0b400;
-}
-
-/* --- Panel Status & Hasil --- */
-.status-panel {
-    margin-top: 25px; /* Ruang untuk panah head */
-    padding: 15px;
+    border: 1px solid var(--color-border);
     background-color: #f9f9f9;
-    border-radius: 6px;
 }
-#current-state {
-    font-family: 'Courier New', Courier, monospace;
-    color: #d9534f;
+
+.tape-cell.header {
+    background-color: #eee;
+    color: #999;
 }
-#result-display {
-    margin-top: 10px;
-    padding: 15px;
-    font-size: 1.3em;
+
+.tape-cell.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary-dark);
+}
+
+/* Status & Hasil */
+#status-text {
+    font-size: 1.5rem;
     font-weight: bold;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+#result-text {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0;
     text-align: center;
-    border-radius: 6px;
-    display: none;
-}
-#result-display.accept {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    display: block;
-}
-#result-display.reject {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    display: block;
+    padding: 16px;
+    border-radius: var(--border-radius);
 }
 
-/* --- Log Jejak Eksekusi (Kolom Kiri) --- */
-.trace-log-container h3 {
-    margin-bottom: 10px;
-}
-#trace-log {
-    margin-top: 0;
-}
-#trace-output {
-    background-color: #1e1e1e;
-    color: #d4d4d4;
-    font-family: 'Courier New', Courier, monospace;
-    padding: 15px;
-    border-radius: 6px;
-    max-height: 400px; /* Lebih tinggi */
-    overflow-y: auto;
-    white-space: pre-wrap;
+#result-text.accepted {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--color-success);
 }
 
-/* --- Panel Nama Kelompok --- */
-.group-container {
+#result-text.rejected {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--color-danger);
+}
+
+/* 7. Panel Nama Kelompok (Tersembunyi) */
+.group-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: var(--color-card-bg);
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+    padding: var(--gap);
+    z-index: 1000;
+
+    /* Sembunyikan di luar layar */
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.group-panel.is-open {
+    transform: translateX(0);
+}
+
+.group-panel-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.group-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.group-panel li {
+    font-size: 1.1rem;
+    padding: 8px 0;
+}
+
+/* Tombol Vertikal */
+.group-panel-toggle {
     position: fixed;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-}
-.group-button {
+    z-index: 999;
+
+    /* Teks Vertikal */
     writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    padding: 15px 8px;
+    text-orientation: mixed;
+
+    background-color: var(--color-primary);
+    color: white;
     border: none;
-    border-radius: 8px 0 0 8px;
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
+    padding: 16px 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-}
-.group-button:hover {
-    background-color: #0056b3;
-}
-.group-list {
-    background-color: rgba(40, 40, 40, 0.9);
-    color: white;
-    padding: 20px;
-    border-radius: 8px 0 0 8px;
-    min-width: 250px;
-    transition: all 0.3s ease-out;
-    margin-right: -1px;
-}
-.group-list.hide {
-    transform: translateX(100%);
-    opacity: 0;
-    visibility: hidden;
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Responsif untuk HP --- */
+/* 8. Media Query untuk Layar Kecil (Mobile) */
 @media (max-width: 900px) {
-    .main-content {
-        flex-direction: column; /* Tumpuk kolom */
+    .layout-container {
+        /* Tumpuk kolom di layar kecil */
+        grid-template-columns: 1fr;
     }
-    .column-right {
-        position: static; /* Hapus 'sticky' */
-        margin-top: 20px;
-    }
-    .group-list {
-        min-width: 200px;
+
+    .sidebar-column {
+        /* Matikan sticky di layar kecil */
+        position: static;
+        top: auto;
     }
 }
