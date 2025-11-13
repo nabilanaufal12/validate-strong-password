@@ -1,22 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================================
+    // 0. Logika Panel Info Kelompok (BARU)
+    // ===========================================
+    const panel = document.getElementById('group-panel');
+    const openButton = document.getElementById('group-panel-toggle');
+    const closeButton = document.getElementById('group-panel-close');
+    
+    if (panel && openButton && closeButton) {
+        openButton.addEventListener('click', () => {
+            panel.classList.add('is-open');
+        });
+        closeButton.addEventListener('click', () => {
+            panel.classList.remove('is-open');
+        });
+    }
+
+    // ===========================================
     // 1. Inisialisasi Elemen UI
     // ===========================================
     const form = document.getElementById('tm-form');
-    const passwordInput = document.getElementById('input-string'); // Sesuaikan dengan ID di HTML baru
+    const passwordInput = document.getElementById('input-string');
     const logArea = document.getElementById('log-area');
     const tapeContainer = document.getElementById('tape-container');
     const resultMessageContainer = document.getElementById('result-message-container');
     const resultMessage = document.getElementById('result-message');
     const resetButton = document.getElementById('reset-button');
+    const btnSubmit = form.querySelector('button[type="submit"]');
 
     // Overlay Elements untuk Animasi Feedback
     const overlayAccept = document.getElementById('result-accepted');
     const overlayReject = document.getElementById('result-rejected');
 
-    // Cek apakah elemen penting ada untuk menghindari error
-    if (!form || !passwordInput || !logArea || !tapeContainer) {
+    if (!form || !passwordInput || !logArea || !tapeContainer || !btnSubmit) {
         console.error('Elemen UI penting tidak ditemukan. Pastikan ID di HTML sesuai.');
         return;
     }
@@ -25,88 +41,112 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Fungsi Utilitas
     // ===========================================
 
-    // Fungsi untuk menampilkan overlay feedback animasi
     function showFeedback(type) {
         const overlay = (type === 'accepted') ? overlayAccept : overlayReject;
-        
         if (overlay) {
             overlay.classList.add('show');
-            
-            // Sembunyikan overlay secara otomatis setelah 2.5 detik
             setTimeout(() => {
                 overlay.classList.remove('show');
             }, 2500);
         }
     }
 
-    // Fungsi untuk merender Pita (Tape)
     function renderTape(tapeData) {
-        tapeContainer.innerHTML = ''; // Bersihkan pita sebelumnya
-
-        // tapeData diharapkan berisi array of characters, dan index head
-        // Namun, dari kode backend biasanya kita menerima list state akhir.
-        // Untuk visualisasi statis hasil akhir:
+        tapeContainer.innerHTML = '';
         
-        const cells = tapeData.cells || []; 
-        const headIndex = tapeData.head_position || 0;
+        // Cek jika tapeData adalah string, ubah jadi object
+        let cells = [];
+        let headIndex = 0;
+
+        if (typeof tapeData.tape === 'string' && tapeData.head_position !== undefined) {
+            // Ini format dari backend (versi baru)
+            cells = tapeData.tape.split('');
+            headIndex = tapeData.head_position;
+        } else if (tapeData.cells && tapeData.head_position !== undefined) {
+            // Ini format dari JS (versi lama)
+            cells = tapeData.cells;
+            headIndex = tapeData.head_position;
+        } else {
+             tapeContainer.innerHTML = '<div class="tape-placeholder">TAPE: [ERROR_LOAD]...</div>';
+             return;
+        }
 
         if (cells.length === 0) {
-            tapeContainer.innerHTML = '<div class="tape-placeholder">Pita Kosong</div>';
+            tapeContainer.innerHTML = '<div class="tape-placeholder">TAPE: [EMPTY]...</div>';
             return;
         }
 
-        cells.forEach((symbol, index) => {
+        // Tambahkan padding Blank di awal dan akhir untuk visualisasi
+        const PADDING_SIZE = 15;
+        let paddedCells = [...cells];
+        let adjustedHeadIndex = headIndex;
+
+        // Padding kiri
+        const leftPadding = Math.max(0, PADDING_SIZE - headIndex);
+        for(let i=0; i < leftPadding; i++) {
+            paddedCells.unshift('B');
+            adjustedHeadIndex++;
+        }
+ 
+        // Padding kanan
+        const rightPadding = Math.max(0, PADDING_SIZE - (cells.length - 1 - headIndex));
+         for(let i=0; i < rightPadding; i++) {
+            paddedCells.push('B');
+        }
+
+        paddedCells.forEach((symbol, index) => {
             const cellDiv = document.createElement('div');
             cellDiv.className = 'tape-cell';
             
-            // Jika simbol adalah blank (misal '_'), ganti dengan 'B' atau spasi untuk visual
-            cellDiv.textContent = (symbol === '_' || symbol === ' ') ? 'B' : symbol;
+            // Ganti simbol blank (B atau _) dengan visual yang lebih baik
+            cellDiv.textContent = (symbol === '_' || symbol === 'B' || symbol === ' ') ? ' ' : symbol;
+            if(cellDiv.textContent === ' ') {
+                cellDiv.style.opacity = "0.3";
+            }
 
-            // Tandai posisi head
-            if (index === headIndex) {
+            if (index === adjustedHeadIndex) {
                 cellDiv.classList.add('current');
             }
 
             tapeContainer.appendChild(cellDiv);
         });
 
-        // Auto-scroll pita agar head terlihat di tengah (opsional)
         const activeCell = tapeContainer.querySelector('.tape-cell.current');
         if (activeCell) {
             activeCell.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
     }
 
+    function resetUI() {
+        passwordInput.value = '';
+        logArea.textContent = '';
+        tapeContainer.innerHTML = '<div class="tape-placeholder">TAPE: [STANDBY]... INPUT DIPERLUKAN.</div>';
+        resultMessage.textContent = 'STATUS: MENUNGGU INPUT...';
+        resultMessage.className = '';
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = '> RUN_SIMULATION';
+    }
+
     // ===========================================
     // 3. Event Listeners
     // ===========================================
 
-    // Handle Form Submit
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const password = passwordInput.value.trim();
-
-        if (!password) {
-            alert("Mohon masukkan password terlebih dahulu.");
-            return;
-        }
+        const password = passwordInput.value; // Tidak perlu .trim() jika spasi di awal/akhir valid
 
         // State Loading
-        const btnSubmit = form.querySelector('button[type="submit"]');
         const originalBtnText = btnSubmit.textContent;
         btnSubmit.disabled = true;
-        btnSubmit.textContent = 'Memproses...';
+        btnSubmit.innerHTML = '&gt; PROCESSING...';
         
-        // Reset tampilan sementara
         logArea.textContent = 'Memulai validasi mesin turing...\n';
         resultMessage.textContent = 'Sedang memproses...';
-        resultMessage.style.color = 'var(--text-secondary)';
-        tapeContainer.innerHTML = '';
+        resultMessage.className = '';
+        tapeContainer.innerHTML = '<div class="tape-placeholder">TAPE: [PROCESSING]...</div>';
 
         try {
-            // Kirim request ke backend
-            // Menggunakan FormData agar sesuai dengan request.form di Flask
             const formData = new FormData(form);
 
             const response = await fetch('/run', {
@@ -114,45 +154,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
             const data = await response.json();
 
+            if (!response.ok) {
+                throw new Error(data.error || `HTTP error! status: ${response.status}`);
+            }
+            
             // --- Update UI dengan Data Respons ---
 
-            // 1. Update Log Area (Jejak Eksekusi)
-            // Jika backend mengirim log sebagai array, kita join. Jika string, langsung pakai.
+            // 1. Update Log
             if (Array.isArray(data.log)) {
                 logArea.textContent = data.log.join('\n');
             } else {
                 logArea.textContent = data.log;
             }
-            // Auto scroll ke bawah log
             logArea.scrollTop = logArea.scrollHeight;
 
-            // 2. Update Pita (Visualisasi Akhir)
-            // Asumsi backend mengirim struktur: { tape: "string_tape", head: index }
-            // Kita ubah string menjadi array untuk fungsi renderTape
-            const tapeCells = data.tape.split(''); 
-            // Jika backend tidak mengirim posisi head akhir, default ke akhir string
-            const headPos = data.head_position !== undefined ? data.head_position : tapeCells.length - 1;
-            
-            renderTape({
-                cells: tapeCells,
-                head_position: headPos
-            });
+            // 2. Update Pita
+            // data.tape (string) dan data.head_position (int)
+            renderTape({ tape: data.tape, head_position: data.head_position });
 
-            // 3. Update Hasil dan Animasi
+            // 3. Update Hasil
             const resultText = data.result; // "DITERIMA" atau "DITOLAK"
-            resultMessage.textContent = `Status Akhir: ${resultText}`;
+            resultMessage.textContent = `STATUS: ${resultText}`;
+            resultMessage.className = ''; // Hapus kelas lama
 
             if (resultText === 'DITERIMA') {
-                resultMessage.style.color = 'var(--green-accept)';
+                resultMessage.classList.add('accepted');
                 showFeedback('accepted');
             } else {
-                resultMessage.style.color = 'var(--red-reject)';
+                resultMessage.classList.add('rejected');
                 showFeedback('rejected');
             }
 
@@ -160,30 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
             logArea.textContent += `\n[SISTEM ERROR]: ${error.message}`;
             resultMessage.textContent = 'Terjadi kesalahan sistem.';
-            resultMessage.style.color = 'var(--red-reject)';
+            resultMessage.className = 'rejected';
         } finally {
             // Kembalikan tombol ke kondisi semula
             btnSubmit.disabled = false;
-            btnSubmit.textContent = originalBtnText;
+            btnSubmit.innerHTML = originalBtnText;
         }
     });
 
-    // Handle Tombol Reset
-    resetButton.addEventListener('click', () => {
-        // Reset Form
-        passwordInput.value = '';
-        
-        // Reset Log
-        logArea.textContent = '';
-        
-        // Reset Pita
-        tapeContainer.innerHTML = '';
-        
-        // Reset Pesan Hasil
-        resultMessage.textContent = 'Masukkan password dan jalankan untuk melihat hasil.';
-        resultMessage.style.color = 'var(--text-primary)'; // Kembali ke warna default
-    });
-
-    // (Opsional) Focus ke input saat halaman dimuat
+    resetButton.addEventListener('click', resetUI);
     passwordInput.focus();
 });

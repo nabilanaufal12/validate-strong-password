@@ -3,76 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TM Validator | SaaS Modern</title>
+    <title>TM Password Validator [v2.Cyberpunk]</title>
     
+    <!-- Google Font: Fira Code (Monospaced) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap" rel="stylesheet">
     
+    <!-- Link ke CSS baru -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <header class="app-header">
-        <h1>TM Password Validator</h1>
+    <!-- Header dengan Judul dan Tombol Info Kelompok -->
+    <header class="main-header">
+        <h1>[TM-SIMULATOR_PASSWORD_VALIDATOR]</h1>
+        <button id="group-panel-toggle" class-="group-button" title="Info Kelompok">i</button>
     </header>
 
-    <main class="main-layout">
-        <section class="left-column">
-            <div class="card">
-                <h2>Kontrol</h2>
-                <form id="tm-form">
-                    <label for="input-string">Masukkan Password:</label>
-                    <input type="text" id="input-string" name="input_string" placeholder="Contoh: P@ssw0rd123">
+    <!-- Kontainer Utama -->
+    <main class="container">
+        
+        <!-- Kolom Kiri: Input dan Log -->
+        <section class="column-left">
+            
+            <!-- Panel Input -->
+            <div class="card glass-panel">
+                <div class="card-header">
+                    <h2>// 1. KONTROL INPUT</h2>
+                    <div class="header-line"></div>
+                </div>
+                <form id="tm-form" class="card-content">
+                    <label for="input-string">INPUT_STRING:</label>
+                    <input type="text" id="input-string" name="input_string" class="hacker-input" placeholder="Ketik password di sini...">
+                    
                     <div class="button-group">
-                        <button type="submit" class="btn btn-primary">Jalankan Validasi</button>
-                        <button type="button" id="reset-button" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary btn-glow">
+                            &gt; RUN_SIMULATION
+                        </button>
+                        <button type="button" id="reset-button" class="btn btn-secondary">
+                            &gt; RESET
+                        </button>
                     </div>
                 </form>
             </div>
-            
-            <div class="card">
-                <h2>Jejak Eksekusi</h2>
-                <pre id="log-area" class="code-editor-look"></pre>
+
+            <!-- Panel Log Eksekusi -->
+            <div class="card glass-panel log-card">
+                <div class="card-header">
+                    <h2>// 2. JEJAK EKSEKUSI [LOG]</h2>
+                    <div class="header-line"></div>
+                </div>
+                <pre id="log-area" class="card-content log-content"></pre>
             </div>
+
         </section>
 
-        <section class="right-column">
-            <div class="card">
-                <h2>Pita Mesin Turing</h2>
-                <div id="tape-container">
+        <!-- Kolom Kanan: Visualisasi dan Hasil -->
+        <section class="column-right">
+
+            <!-- Panel Visualisasi Pita -->
+            <div class="card glass-panel tape-card">
+                <div class="card-header">
+                    <h2>// 3. VISUALISASI PITA</h2>
+                    <div class="header-line"></div>
+                </div>
+                <div class="card-content">
+                    <div class="tape-container-wrapper">
+                        <div id="tape-container">
+                            <!-- Sel pita akan di-generate oleh JS -->
+                            <div class="tape-placeholder">TAPE: [STANDBY]... INPUT DIPERLUKAN.</div>
+                        </div>
                     </div>
-            </div>
-            
-            <div class="card">
-                <h2>Hasil</h2>
-                <div id="result-message-container">
-                    <p id="result-message">Masukkan password dan jalankan untuk melihat hasil.</p>
                 </div>
             </div>
+
+            <!-- Panel Hasil Akhir -->
+            <div class="card glass-panel result-card">
+                <div class="card-header">
+                    <h2>// 4. HASIL AKHIR</h2>
+                    <div class="header-line"></div>
+                </div>
+                <div id="result-message-container" class="card-content">
+                    <p id="result-message">STATUS: MENUNGGU INPUT...</p>
+                </div>
+            </div>
+
         </section>
     </main>
 
-    <div id="result-accepted" class="feedback-overlay">
-        <div class="feedback-icon-wrapper">
-            <svg class="feedback-icon checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-            <h2>DITERIMA</h2>
-        </div>
+    <!-- Overlay Hasil: DITERIMA -->
+    <div class="feedback-overlay" id="result-accepted">
+        <div class="feedback-text glow-accept">DITERIMA</div>
+    </div>
+    
+    <!-- Overlay Hasil: DITOLAK -->
+    <div class="feedback-overlay" id="result-rejected">
+        <div class="feedback-text glow-reject">DITOLAK</div>
     </div>
 
-    <div id="result-rejected" class="feedback-overlay">
-        <div class="feedback-icon-wrapper">
-            <svg class="feedback-icon cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="cross-circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="cross-path" fill="none" d="M16 16 36 36 M36 16 16 36"/>
-            </svg>
-            <h2>DITOLAK</h2>
+    <!-- Panel Info Kelompok (Sidebar) -->
+    <aside class="group-panel" id="group-panel">
+        <button class="panel-close-button" id="group-panel-close" title="Tutup">&times;</button>
+        <div class="panel-content">
+            <h3>[PROJECT_INFO]</h3>
+            <h4>Simulator Mesin Turing: Validasi Password</h4>
+            <br>
+            <h3>[TEAM_MEMBERS]</h3>
+            <ul class="team-list">
+                <li>(220...) - Nabila Naufal</li>
+                <li>(220...) - [Nama Anggota 2]</li>
+                <li>(220...) - [Nama Anggota 3]</li>
+                <li>(220...) - [Nama Anggota 4]</li>
+            </ul>
         </div>
-    </div>
+    </aside>
 
+    <!-- Script JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
