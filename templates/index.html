@@ -3,86 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulator Mesin Turing - Desain Baru</title>
+    <title>TM Validator | SaaS Modern</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
     <header class="app-header">
-        <h1>Simulator Mesin Turing: Validasi Password</h1>
+        <h1>TM Password Validator</h1>
     </header>
 
-    <div class="layout-container">
-
-        <main class="content-column">
-
-            <section class="card" id="form-card">
-                <h2>Input Simulator</h2>
+    <main class="main-layout">
+        <section class="left-column">
+            <div class="card">
+                <h2>Kontrol</h2>
                 <form id="tm-form">
-                    <label for="password">Masukkan Password:</label>
-                    <div class="input-group">
-                        <input type="text" id="password" name="password" placeholder="Contoh: P@ssword123">
-                        <button type="submit" class="button-primary">Jalankan</button>
+                    <label for="input-string">Masukkan Password:</label>
+                    <input type="text" id="input-string" name="input_string" placeholder="Contoh: P@ssw0rd123">
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Jalankan Validasi</button>
+                        <button type="button" id="reset-button" class="btn btn-secondary">Reset</button>
                     </div>
                 </form>
-            </section>
+            </div>
+            
+            <div class="card">
+                <h2>Jejak Eksekusi</h2>
+                <pre id="log-area" class="code-editor-look"></pre>
+            </div>
+        </section>
 
-            <section class="card" id="rules-card">
-                <h2>Syarat Password</h2>
-                <ul id="password-rules">
-                    <li>Minimal 8 karakter</li>
-                    <li>Mengandung setidaknya satu huruf besar (A-Z)</li>
-                    <li>Mengandung setidaknya satu huruf kecil (a-z)</li>
-                    <li>Mengandung setidaknya satu angka (0-9)</li>
-                    <li>Mengandung setidaknya satu simbol (!@#$%^&*)</li>
-                </ul>
-            </section>
-
-            <section class="card" id="log-card">
-                <h2>Jejak Eksekusi (Log)</h2>
-                <pre id="log-content">(Menunggu eksekusi...)</pre>
-            </section>
-
-        </main>
-
-        <aside class="sidebar-column">
-
-            <section class="card" id="tape-card">
-                <h2>Visualisasi Pita</h2>
-                <div id="tape-visualization">
-                    <div id="tape-container">
-                        </div>
-                </div>
-            </section>
-
-            <section classs="card" id="status-card">
-                <h2>Status Saat Ini</h2>
-                <p id="status-text">-</p>
-            </section>
-
-            <section class="card" id="result-card">
+        <section class="right-column">
+            <div class="card">
+                <h2>Pita Mesin Turing</h2>
+                <div id="tape-container">
+                    </div>
+            </div>
+            
+            <div class="card">
                 <h2>Hasil</h2>
-                <p id="result-text">-</p>
-            </section>
+                <div id="result-message-container">
+                    <p id="result-message">Masukkan password dan jalankan untuk melihat hasil.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        </aside>
+    <div id="result-accepted" class="feedback-overlay">
+        <div class="feedback-icon-wrapper">
+            <svg class="feedback-icon checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h2>DITERIMA</h2>
+        </div>
+    </div>
 
-    </div> <aside class="group-panel" id="group-panel">
-        <button class="group-panel-close" id="group-panel-close">&times;</button>
-        <h2>Nama Kelompok</h2>
-        <ul>
-            <li>Nabila Naufal</li>
-            <li>Anggota 2</li>
-            <li>Anggota 3</li>
-            <li>Anggota 4</li>
-        </ul>
-    </aside>
-
-    <button class="group-panel-toggle" id="group-panel-toggle">
-        Nama Kelompok
-    </button>
+    <div id="result-rejected" class="feedback-overlay">
+        <div class="feedback-icon-wrapper">
+            <svg class="feedback-icon cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="cross-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="cross-path" fill="none" d="M16 16 36 36 M36 16 16 36"/>
+            </svg>
+            <h2>DITOLAK</h2>
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 </body>
 </html>

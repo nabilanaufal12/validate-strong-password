@@ -1,312 +1,302 @@
-/* 1. Global Reset & Setup Font */
+/* :root berisi palet warna dan variabel global */
 :root {
-    --color-primary: #007bff;
-    --color-primary-dark: #0056b3;
-    --color-success: #28a745;
-    --color-danger: #dc3545;
-    --color-background: #f4f7f6;
-    --color-card-bg: #ffffff;
-    --color-text: #333;
-    --color-text-muted: #666;
-    --color-border: #e0e0e0;
-    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --border-radius: 8px;
-    --gap: 24px;
+    --primary-blue: #007aff;
+    --primary-blue-light: #f0f7ff;
+    --green-accept: #34c759;
+    --red-reject: #ff3b30;
+    --bg-light-gray: #f8f9fa; /* Background utama body */
+    --card-bg: #ffffff;
+    --text-primary: #1c1c1e;
+    --text-secondary: #6b7280;
+    --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Bayangan halus */
+    --border-radius: 12px;
 }
 
-*,
-*::before,
-*::after {
+/* Reset dan Body Styling */
+* {
     box-sizing: border-box;
-}
-
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                 "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     margin: 0;
-    background-color: var(--color-background);
-    color: var(--color-text);
-    line-height: 1.6;
-}
-
-h1, h2 {
-    margin-top: 0;
-    font-weight: 600;
-}
-
-h1 {
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 8px;
-}
-
-pre {
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    font-size: 0.9rem;
-}
-
-/* 2. Header Aplikasi */
-.app-header {
-    background-color: var(--color-card-bg);
-    padding: 20px var(--gap);
-    box-shadow: var(--shadow-soft);
-    border-bottom: 1px solid var(--color-border);
-}
-
-/* 3. Struktur Tata Letak Utama (Grid) */
-.layout-container {
-    display: grid;
-    /* Kolom kiri 2 bagian, kolom kanan 1 bagian */
-    grid-template-columns: 2fr 1fr;
-    /* Sejajarkan item di bagian atas */
-    align-items: start;
-    gap: var(--gap);
-    padding: var(--gap);
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-/* 4. Kolom (Kiri & Kanan) */
-.content-column {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-}
-
-.sidebar-column {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-
-    /* KEAJAIBAN STICKY DI SINI! */
-    position: sticky;
-    /* Menempel 24px dari atas viewport */
-    top: var(--gap);
-}
-
-/* 5. Komponen "Card" Modern */
-.card {
-    background-color: var(--color-card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    padding: 20px;
-    border: 1px solid var(--color-border);
-}
-
-/* 6. Styling Elemen Spesifik */
-
-/* Form Input */
-#tm-form label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-#tm-form .input-group {
-    display: flex;
-    gap: 10px;
-}
-
-#tm-form input[type="text"] {
-    flex-grow: 1;
-    padding: 10px 14px;
-    font-size: 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    transition: box-shadow 0.2s, border-color 0.2s;
-}
-
-#tm-form input[type="text"]:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-}
-
-.button-primary {
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.button-primary:hover {
-    background-color: var(--color-primary-dark);
-}
-
-/* Daftar Syarat Password */
-#password-rules {
-    padding-left: 20px;
-    margin: 0;
-    color: var(--color-text-muted);
-}
-
-#password-rules li {
-    margin-bottom: 8px;
-}
-
-/* Jejak Eksekusi (Log) */
-#log-content {
-    background-color: #fdfdfd;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: 16px;
-
-    /* Ini penting: buat log bisa di-scroll secara internal */
-    max-height: 600px;
-    overflow-y: auto;
-
-    white-space: pre-wrap; /* Agar baris tidak terlalu panjang */
-    word-break: break-all;
-}
-
-/* Visualisasi Pita */
-#tape-visualization {
-    overflow-x: auto; /* Izinkan scroll horizontal jika pita terlalu panjang */
-    padding: 10px 0;
-}
-#tape-container {
-    display: flex;
-    gap: 2px;
-}
-
-.tape-cell {
-    min-width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border: 1px solid var(--color-border);
-    background-color: #f9f9f9;
-}
-
-.tape-cell.header {
-    background-color: #eee;
-    color: #999;
-}
-
-.tape-cell.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary-dark);
-}
-
-/* Status & Hasil */
-#status-text {
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    color: var(--color-primary);
-    margin: 0;
-}
-
-#result-text {
-    font-size: 1.75rem;
-    font-weight: bold;
-    margin: 0;
-    text-align: center;
-    padding: 16px;
-    border-radius: var(--border-radius);
-}
-
-#result-text.accepted {
-    background-color: rgba(40, 167, 69, 0.1);
-    color: var(--color-success);
-}
-
-#result-text.rejected {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: var(--color-danger);
-}
-
-/* 7. Panel Nama Kelompok (Tersembunyi) */
-.group-panel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 100%;
-    background-color: var(--color-card-bg);
-    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
-    padding: var(--gap);
-    z-index: 1000;
-
-    /* Sembunyikan di luar layar */
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
-}
-
-.group-panel.is-open {
-    transform: translateX(0);
-}
-
-.group-panel-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 2.5rem;
-    background: none;
-    border: none;
-    color: var(--color-text-muted);
-    cursor: pointer;
-}
-
-.group-panel ul {
-    list-style: none;
     padding: 0;
 }
 
-.group-panel li {
-    font-size: 1.1rem;
-    padding: 8px 0;
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-light-gray);
+    color: var(--text-primary);
+    line-height: 1.6;
 }
 
-/* Tombol Vertikal */
-.group-panel-toggle {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    z-index: 999;
+.app-header {
+    background-color: var(--card-bg);
+    padding: 1.5rem 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
 
-    /* Teks Vertikal */
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
+.app-header h1 {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    text-align: center;
+}
 
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 16px 8px;
-    font-size: 1rem;
+/* Layout Utama (Grid) */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dua kolom sama besar */
+    gap: 2rem;
+    padding: 0 2rem 2rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Card Styling (Pengganti border) */
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+/* Form Styling */
+form label {
+    display: block;
     font-weight: 600;
-    cursor: pointer;
-    border-top-left-radius: var(--border-radius);
-    border-bottom-left-radius: var(--border-radius);
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
 }
 
-/* 8. Media Query untuk Layar Kecil (Mobile) */
-@media (max-width: 900px) {
-    .layout-container {
-        /* Tumpuk kolom di layar kecil */
-        grid-template-columns: 1fr;
+form input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.button-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #e9ecef;
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: #d6dbe0;
+}
+
+/* Log Area (Code Editor Look) */
+#log-area {
+    background-color: #f1f3f5; /* Abu-abu sangat muda */
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Tape Styling (Horizontal Scroll) */
+#tape-container {
+    width: 100%;
+    overflow-x: auto; /* Memastikan bisa scroll horizontal */
+    overflow-y: hidden;
+    white-space: nowrap; /* Mencegah sel pita pindah ke baris baru */
+    background-color: var(--primary-blue-light);
+    padding: 1rem;
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch; /* Scroll mulus di iOS */
+}
+
+/* Sembunyikan scrollbar tapi tetap bisa di-scroll */
+#tape-container::-webkit-scrollbar {
+    display: none;
+}
+#tape-container {
+    -ms-overflow-style: none;  /* IE dan Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.tape-cell {
+    display: inline-flex; /* Menggunakan flex untuk centering */
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: var(--card-bg);
+    border-radius: 6px;
+    margin: 0 4px;
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tape-cell.current {
+    background-color: var(--primary-blue);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Hasil */
+#result-message-container {
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+#result-message-container p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* --- Animasi Feedback --- */
+.feedback-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.feedback-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.feedback-icon-wrapper {
+    text-align: center;
+    transform: scale(0.8);
+    opacity: 0;
+    animation: feedback-pop-in 0.4s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.feedback-icon-wrapper h2 {
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+
+.feedback-icon {
+    width: 120px;
+    height: 120px;
+}
+
+/* Animasi Centang (Checkmark) */
+#result-accepted h2 { color: var(--green-accept); }
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: var(--green-accept);
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-width: 4;
+    stroke: var(--green-accept);
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+/* Animasi Silang (Cross) */
+#result-rejected h2 { color: var(--red-reject); }
+.cross-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: var(--red-reject);
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.cross-path {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-width: 4;
+    stroke: var(--red-reject);
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes stroke {
+    100% { stroke-dashoffset: 0; }
+}
+
+@keyframes feedback-pop-in {
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* --- Responsivitas --- */
+@media (max-width: 992px) {
+    .main-layout {
+        grid-template-columns: 1fr; /* Stack kolom di layar kecil */
+    }
+    
+    .app-header {
+        margin-bottom: 1rem;
     }
 
-    .sidebar-column {
-        /* Matikan sticky di layar kecil */
-        position: static;
-        top: auto;
+    .main-layout {
+        padding: 0 1rem 1rem 1rem;
+        gap: 1rem;
     }
 }
