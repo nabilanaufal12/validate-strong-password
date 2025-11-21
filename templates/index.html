@@ -5,29 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TM Password Validator [v2.Cyberpunk]</title>
     
-    <!-- Google Font: Fira Code (Monospaced) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     
-    <!-- Link ke CSS baru -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <!-- Header dengan Judul dan Tombol Info Kelompok -->
     <header class="main-header">
-        <h1>[TM-SIMULATOR_PASSWORD_VALIDATOR]</h1>
-        <button id="group-panel-toggle" class-="group-button" title="Info Kelompok">i</button>
+        <div class="header-content">
+            <h1><span class="blink">_</span>TM-SIMULATOR_PASSWORD_VALIDATOR</h1>
+            <div class="header-decoration">SYSTEM: ONLINE</div>
+        </div>
+        <button id="group-panel-toggle" class="group-button" title="Info Kelompok">
+            [ TEAM_INFO ]
+        </button>
     </header>
 
-    <!-- Kontainer Utama -->
     <main class="container">
         
-        <!-- Kolom Kiri: Input dan Log -->
         <section class="column-left">
             
-            <!-- Panel Input -->
             <div class="card glass-panel">
                 <div class="card-header">
                     <h2>// 1. KONTROL INPUT</h2>
@@ -35,7 +34,7 @@
                 </div>
                 <form id="tm-form" class="card-content">
                     <label for="input-string">INPUT_STRING:</label>
-                    <input type="text" id="input-string" name="input_string" class="hacker-input" placeholder="Ketik password di sini...">
+                    <input type="text" id="input-string" name="input_string" class="hacker-input" placeholder="Masukan password..." autocomplete="off">
                     
                     <div class="button-group">
                         <button type="submit" class="btn btn-primary btn-glow">
@@ -48,40 +47,64 @@
                 </form>
             </div>
 
-            <!-- Panel Log Eksekusi -->
+            <div class="requirements-panel">
+                <div class="panel-header">
+                    <span class="blink">>></span> SYSTEM_PROTOCOLS_v1.0
+                </div>
+                <div class="panel-body">
+                    <p class="info-text">Target string must satisfy:</p>
+                    <ul class="req-list">
+                        <li id="req-length">
+                            <span class="status-icon">[ ]</span> Panjang &ge; 8 Karakter
+                        </li>
+                        <li id="req-lower">
+                            <span class="status-icon">[ ]</span> Min. 1 Huruf Kecil (a-z)
+                        </li>
+                        <li id="req-upper">
+                            <span class="status-icon">[ ]</span> Min. 1 Huruf Besar (A-Z)
+                        </li>
+                        <li id="req-number">
+                            <span class="status-icon">[ ]</span> Min. 1 Angka (0-9)
+                        </li>
+                        <li id="req-special">
+                            <span class="status-icon">[ ]</span> Min. 1 Simbol Spesial
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="card glass-panel log-card">
                 <div class="card-header">
                     <h2>// 2. JEJAK EKSEKUSI [LOG]</h2>
                     <div class="header-line"></div>
                 </div>
-                <pre id="log-area" class="card-content log-content"></pre>
+                <pre id="log-area" class="card-content log-content">WAITING FOR PROCESS...</pre>
             </div>
 
         </section>
 
-        <!-- Kolom Kanan: Visualisasi dan Hasil -->
         <section class="column-right">
 
-            <!-- Panel Visualisasi Pita -->
             <div class="card glass-panel tape-card">
                 <div class="card-header">
-                    <h2>// 3. VISUALISASI PITA</h2>
+                    <h2>// 3. VISUALISASI PITA (TAPE)</h2>
                     <div class="header-line"></div>
                 </div>
                 <div class="card-content">
                     <div class="tape-container-wrapper">
                         <div id="tape-container">
-                            <!-- Sel pita akan di-generate oleh JS -->
-                            <div class="tape-placeholder">TAPE: [STANDBY]... INPUT DIPERLUKAN.</div>
+                            <div class="tape-placeholder">SYSTEM STANDBY...</div>
                         </div>
+                    </div>
+                    <div class="tape-legend">
+                        <small>HEAD_POSITION: <span class="blink">█</span></small>
                     </div>
                 </div>
             </div>
 
-            <!-- Panel Hasil Akhir -->
             <div class="card glass-panel result-card">
                 <div class="card-header">
-                    <h2>// 4. HASIL AKHIR</h2>
+                    <h2>// 4. STATUS VALIDASI</h2>
                     <div class="header-line"></div>
                 </div>
                 <div id="result-message-container" class="card-content">
@@ -92,34 +115,44 @@
         </section>
     </main>
 
-    <!-- Overlay Hasil: DITERIMA -->
     <div class="feedback-overlay" id="result-accepted">
-        <div class="feedback-text glow-accept">DITERIMA</div>
+        <div class="feedback-content">
+            <div class="feedback-icon">ACCESS GRANTED</div>
+            <div class="feedback-text glow-accept">PASSWORD DITERIMA</div>
+        </div>
     </div>
     
-    <!-- Overlay Hasil: DITOLAK -->
     <div class="feedback-overlay" id="result-rejected">
-        <div class="feedback-text glow-reject">DITOLAK</div>
+        <div class="feedback-content">
+            <div class="feedback-icon">ACCESS DENIED</div>
+            <div class="feedback-text glow-reject">PASSWORD DITOLAK</div>
+        </div>
     </div>
 
-    <!-- Panel Info Kelompok (Sidebar) -->
     <aside class="group-panel" id="group-panel">
         <button class="panel-close-button" id="group-panel-close" title="Tutup">&times;</button>
         <div class="panel-content">
-            <h3>[PROJECT_INFO]</h3>
-            <h4>Simulator Mesin Turing: Validasi Password</h4>
+            <h3>[PROJECT_METADATA]</h3>
+            <p>Mata Kuliah: Teori Bahasa & Otomata</p>
+            <p>Project: Turing Machine Simulator</p>
+            <div class="header-line"></div>
             <br>
-            <h3>[TEAM_MEMBERS]</h3>
+            <h3>[MIKIR_KIDS_TEAM]</h3>
             <ul class="team-list">
-                <li>(220...) - Nabila Naufal</li>
-                <li>(220...) - [Nama Anggota 2]</li>
-                <li>(220...) - [Nama Anggota 3]</li>
-                <li>(220...) - [Nama Anggota 4]</li>
+                <li><span class="nim">2401020073</span> Nabil</li>
+                <li><span class="nim">2401020057</span> Rauf Hidayat</li>
+                <li><span class="nim">2401020045</span> Raga Tapa Dhijaya</li>
+                <li><span class="nim">2401020082</span> Muhammad Fathir</li>
+                <li><span class="nim">2401020058</span> Muhammad Rahman Afrialdi</li>
+                <li><span class="nim">2301020125</span> Alpin Rifaldi Siregar</li>
             </ul>
+            
+            <div class="panel-footer">
+                <small>System v2.0 // Cyberpunk Ed.</small>
+            </div>
         </div>
     </aside>
 
-    <!-- Script JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

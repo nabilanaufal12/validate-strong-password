@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================================
-    // 0. Audio Context (Sound Effect)
+    // 0. Audio Context (Sound Effect: Retro Beep)
     // ===========================================
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -15,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
-        // Efek suara 'square' retro 8-bit
+        // Tipe suara 'square' untuk nuansa 8-bit / komputer jadul
         oscillator.type = 'square';
+        // Frekuensi mulai tinggi lalu turun cepat (efek "tik")
         oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
         oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
 
+        // Volume envelope (fade out cepat)
         gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
 
@@ -48,11 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
         closeButton.addEventListener('click', () => panel.classList.remove('is-open'));
     }
 
-    // Overlay Feedback
+    // Overlay Feedback (Animasi layar penuh)
     const overlayAccept = document.getElementById('result-accepted');
     const overlayReject = document.getElementById('result-rejected');
 
-    // Global Animation Interval
+    // Variabel global untuk interval animasi
     let animationInterval = null;
 
     // ===========================================
@@ -65,9 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let cells = [];
         let headIndex = 0;
 
-        // Handle 2 format data:
-        // 1. Dari backend (string): { tape: "abc", head_position: 1 }
-        // 2. Dari parsing log (array): { cells: ['a','b'], head_position: 1 }
+        // Normalisasi data: backend mungkin mengirim string atau array
         if (typeof tapeData.tape === 'string') {
             cells = tapeData.tape.split('');
             headIndex = tapeData.head_position || 0;
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (cells.length === 0) {
-            tapeContainer.innerHTML = '<div class="tape-placeholder">TAPE EMPTY</div>';
+            tapeContainer.innerHTML = '<div class="tape-placeholder">SYSTEM STANDBY</div>';
             return;
         }
 
@@ -103,25 +103,24 @@ document.addEventListener('DOMContentLoaded', () => {
             paddedCells.push('B');
         }
 
-        // Render Cell
+        // Render setiap sel
         paddedCells.forEach((symbol, index) => {
             const cellDiv = document.createElement('div');
             cellDiv.className = 'tape-cell';
             
-            // --- MODIFIKASI BAGIAN INI ---
             // Cek apakah simbol adalah Blank ('_' atau 'B' atau spasi)
             const isBlank = (symbol === '_' || symbol === 'B' || symbol === ' ');
 
-            // Jika blank, isi textContent dengan string kosong '' agar tidak terlihat hurufnya
-            // Jika bukan blank, tampilkan simbol aslinya
+            // Jika blank, kosongkan textContent agar visualnya bersih
+            // Jika bukan, tampilkan karakter aslinya
             cellDiv.textContent = isBlank ? '' : symbol;
             
-            // Opsional: Beri efek visual redup pada kotak kosong jika diinginkan
+            // Opsional: Beri sedikit opacity pada kotak kosong
             if(isBlank) {
                 cellDiv.style.opacity = "0.5"; 
             }
 
-            // Highlight Head
+            // Highlight posisi Head saat ini
             if (index === adjustedHeadIndex) {
                 cellDiv.classList.add('current');
             }
@@ -129,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tapeContainer.appendChild(cellDiv);
         });
 
-        // Auto Scroll agar Head selalu di tengah container
+        // Auto Scroll agar sel aktif (Head) selalu di tengah container
         const activeCell = tapeContainer.querySelector('.tape-cell.current');
         if (activeCell) {
             activeCell.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
@@ -155,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let cells = [];
         let headPos = 0;
 
-        // Cari token yang dibungkus kurung siku, misal "[a]"
+        // Cari token yang dibungkus kurung siku, misal "[a]" yang menandakan head
         tokens.forEach((token) => {
             if (!token) return;
             
@@ -176,8 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let step = 0;
         const totalSteps = logs.length;
         
-        // Reset UI
-        logArea.textContent = "INITIALIZING SYSTEM...\n";
+        // Reset Log UI
+        logArea.textContent = "INITIALIZING VALIDATION PROTOCOLS...\n";
         
         // Kecepatan Animasi (semakin kecil angka, semakin cepat)
         const stepDelay = 100; 
@@ -192,17 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const currentLog = logs[step];
             
-            // 1. Update Terminal Log
+            // 1. Update Terminal Log (tambah baris)
             logArea.textContent += currentLog + "\n";
             logArea.scrollTop = logArea.scrollHeight;
 
-            // 2. Update Animasi Pita
+            // 2. Update Animasi Pita (Parsing dari string log)
             const tapeSnapshot = parseTapeFromLogLine(currentLog);
             if (tapeSnapshot) {
                 renderTape(tapeSnapshot);
             }
 
-            // 3. Efek Suara
+            // 3. Mainkan Efek Suara
             playCyberSound();
 
             step++;
@@ -210,10 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function finishAnimation(data) {
-        // Tampilkan Pita Hasil Akhir yang lengkap
+        // Tampilkan Pita Hasil Akhir yang lengkap dari backend
         renderTape({ tape: data.tape, head_position: data.head_position });
 
-        // Tampilkan Status (Diterima/Ditolak)
+        // Tampilkan Status Akhir (Diterima/Ditolak)
         const resultText = data.result; 
         resultMessage.textContent = `STATUS: ${resultText}`;
         resultMessage.className = ''; // Reset class
@@ -222,13 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (resultText === 'DITERIMA') {
             resultMessage.classList.add('accepted');
-            logArea.textContent += "\n>>> ACCESS GRANTED. SYSTEM SECURE.";
+            logArea.textContent += "\n>>> ACCESS GRANTED. PASSWORD IS STRONG.";
         } else {
             resultMessage.classList.add('rejected');
-            logArea.textContent += "\n>>> ACCESS DENIED. INSECURE PASSWORD.";
+            logArea.textContent += "\n>>> ACCESS DENIED. PASSWORD WEAK.";
         }
         
-        // Efek Overlay layar penuh sebentar
+        // Tampilkan Overlay layar penuh sebentar
         if (overlay) {
             overlay.classList.add('show');
             setTimeout(() => overlay.classList.remove('show'), 2500);
@@ -236,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         logArea.scrollTop = logArea.scrollHeight;
         
-        // Aktifkan tombol lagi
+        // Aktifkan kembali tombol submit
         if (btnSubmit) {
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '> RUN_SIMULATION';
@@ -251,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Reset kondisi sebelum mulai
+            // Hentikan animasi lama jika ada
             if (animationInterval) clearInterval(animationInterval);
             
             // UI Loading State
@@ -260,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnSubmit.innerHTML = '&gt; PROCESSING...';
             }
             
-            logArea.textContent = 'CONNECTING TO CORE...\n';
+            logArea.textContent = 'CONNECTING TO TURING CORE...\n';
             resultMessage.textContent = 'MENGANALISIS...';
             resultMessage.className = '';
             tapeContainer.innerHTML = '<div class="tape-placeholder">LOADING DATA...</div>';
@@ -280,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(data.error || `Server Error: ${response.status}`);
                 }
                 
-                // Jalankan Animasi Log + Pita
+                // Jalankan Animasi
                 animateProcessing(data);
 
             } catch (error) {
@@ -297,22 +296,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Tombol Reset
+    // ===========================================
+    // 5. Tombol Reset
+    // ===========================================
     if (resetButton) {
         resetButton.addEventListener('click', () => {
             if (animationInterval) clearInterval(animationInterval);
             passwordInput.value = '';
-            logArea.textContent = '';
+            logArea.textContent = 'WAITING FOR PROCESS...';
             tapeContainer.innerHTML = '<div class="tape-placeholder">SYSTEM STANDBY</div>';
             resultMessage.textContent = 'STATUS: MENUNGGU INPUT...';
             resultMessage.className = '';
+            
+            // Reset checklist syarat visual
+            document.querySelectorAll('.req-list li').forEach(li => {
+                li.classList.remove('valid', 'invalid');
+                const icon = li.querySelector('.status-icon');
+                if(icon) icon.textContent = '[ ]';
+            });
+
             if (btnSubmit) {
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = '> RUN_SIMULATION';
             }
+            passwordInput.focus();
         });
     }
-    
-    // Auto focus
-    if(passwordInput) passwordInput.focus();
+
+    // ===========================================
+    // 6. Client-Side Realtime Requirement Check
+    // ===========================================
+    if (passwordInput) {
+        passwordInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+
+            // Helper function untuk update tampilan checklist
+            const updateReq = (id, isValid) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                
+                const icon = el.querySelector('.status-icon');
+                if (isValid) {
+                    el.classList.add('valid');
+                    el.classList.remove('invalid');
+                    if(icon) icon.textContent = '[x]';
+                } else {
+                    el.classList.remove('valid');
+                    // el.classList.add('invalid'); // Opsional, aktifkan jika ingin merah saat salah
+                    if(icon) icon.textContent = '[ ]';
+                }
+            };
+
+            // Regex Validasi (Sesuai dengan aturan Python)
+            // 1. Panjang >= 8
+            updateReq('req-length', val.length >= 8);
+
+            // 2. Huruf Kecil (a-z)
+            updateReq('req-lower', /[a-z]/.test(val));
+
+            // 3. Huruf Besar (A-Z)
+            updateReq('req-upper', /[A-Z]/.test(val));
+
+            // 4. Angka (0-9)
+            updateReq('req-number', /[0-9]/.test(val));
+
+            // 5. Simbol Spesial
+            // List simbol ini harus sinkron dengan password_rules.py
+            updateReq('req-special', /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?/`~]/.test(val));
+        });
+        
+        // Fokus otomatis saat halaman dimuat
+        passwordInput.focus();
+    }
 });

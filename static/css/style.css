@@ -1,24 +1,25 @@
+/* static/css/style.css */
+
 /* --- Import Font --- */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
 
 /* --- Variabel Warna Cyberpunk --- */
 :root {
-    --color-bg: #0a0a0f;
+    --color-bg: #050505;
+    --color-panel: rgba(10, 25, 47, 0.85);
     --color-primary: #00f0ff; /* Cyan Neon */
     --color-secondary: #39ff14; /* Hijau Neon */
-    --color-danger: #ff1f8b; /* Pink Neon */
+    --color-danger: #ff0055; /* Pink Neon/Red */
     --color-text: #e0e0e0;
-    --color-text-dark: #7b7b7b;
+    --color-text-dim: #888;
+    
     --font-mono: 'Fira Code', monospace;
-    --shadow-glow-cyan: 0 0 5px var(--color-primary), 
-                        0 0 10px var(--color-primary), 
-                        0 0 20px rgba(0, 240, 255, 0.5);
-    --shadow-glow-green: 0 0 5px var(--color-secondary), 
-                         0 0 10px var(--color-secondary), 
-                         0 0 20px rgba(57, 255, 20, 0.5);
-    --shadow-glow-red: 0 0 5px var(--color-danger), 
-                       0 0 10px var(--color-danger), 
-                       0 0 20px rgba(255, 31, 139, 0.5);
+    --font-header: 'Orbitron', sans-serif;
+
+    --shadow-cyan: 0 0 10px rgba(0, 240, 255, 0.5);
+    --shadow-green: 0 0 10px rgba(57, 255, 20, 0.5);
+    --shadow-red: 0 0 10px rgba(255, 0, 85, 0.5);
 }
 
 /* --- Reset dan Dasar --- */
@@ -35,386 +36,552 @@ body {
     line-height: 1.6;
     padding: 20px;
     font-size: 14px;
-    /* Efek scanline (opsional) */
-    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 100% 2px;
+    
+    /* Background Grid Effect */
+    background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    min-height: 100vh;
 }
 
 /* --- Header --- */
 .main-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.header-content h1 {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
     color: var(--color-primary);
-    text-shadow: var(--shadow-glow-cyan);
-}
-
-.main-header h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    text-transform: uppercase;
     letter-spacing: 2px;
+    text-shadow: var(--shadow-cyan);
 }
 
-/* Tombol Info Kelompok (Header) */
+.header-decoration {
+    font-size: 0.8rem;
+    color: var(--color-secondary);
+    margin-top: 5px;
+}
+
+/* Tombol Info Kelompok */
 #group-panel-toggle {
-    background: transparent;
+    background: rgba(0, 240, 255, 0.1);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 8px 15px;
+    font-family: var(--font-mono);
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
 #group-panel-toggle:hover {
     background: var(--color-primary);
-    color: var(--color-bg);
-    box-shadow: var(--shadow-glow-cyan);
+    color: #000;
+    box-shadow: var(--shadow-cyan);
 }
 
 /* --- Layout Utama --- */
 .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-}
-
-.column-left, .column-right {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .column-left {
     flex: 1;
-    min-width: 300px;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .column-right {
-    flex: 2;
+    flex: 1.5;
     min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
-/* --- Panel Kaca (Glassmorphism) --- */
+/* --- Glass Panel Card --- */
 .card {
-    border-radius: 8px;
-    overflow: hidden;
+    background: var(--color-panel);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 
-.glass-panel {
-    background: rgba(10, 25, 47, 0.75);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 240, 255, 0.2);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+/* Corner Decors */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 10px; height: 10px;
+    border-top: 2px solid var(--color-primary);
+    border-left: 2px solid var(--color-primary);
 }
-
-.glass-panel:hover {
-    border-color: rgba(0, 240, 255, 0.5);
+.card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 10px; height: 10px;
+    border-bottom: 2px solid var(--color-primary);
+    border-right: 2px solid var(--color-primary);
 }
 
 .card-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.3);
 }
+
 .card-header h2 {
     font-size: 1rem;
-    color: var(--color-secondary);
-    font-weight: 400;
+    color: var(--color-text-dim);
+    font-weight: normal;
 }
+
 .header-line {
-    width: 100%;
-    height: 1px;
-    background: var(--color-secondary);
-    opacity: 0.3;
-    margin-top: 4px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), transparent);
+    margin-top: 5px;
 }
 
 .card-content {
-    padding: 16px;
+    padding: 20px;
 }
 
-/* --- Komponen Form --- */
+/* --- Form Input --- */
 #tm-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
+
 #tm-form label {
-    color: var(--color-text-dark);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    color: var(--color-primary);
+    font-weight: bold;
 }
 
 .hacker-input {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--color-text-dark);
-    color: var(--color-text);
-    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+    border-left: 3px solid var(--color-text-dim);
+    padding: 12px;
+    color: #fff;
     font-family: var(--font-mono);
     font-size: 1.1rem;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-.hacker-input:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-glow-cyan);
+    transition: 0.3s;
 }
 
+.hacker-input:focus {
+    border-color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+/* Buttons */
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     margin-top: 10px;
 }
 
 .btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
     font-family: var(--font-mono);
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 10px 15px;
-    border: 1px solid;
-    border-radius: 4px;
+    font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    text-transform: uppercase;
+    transition: 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-primary {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-bg);
+    background: var(--color-primary);
+    color: #000;
+    box-shadow: var(--shadow-cyan);
 }
-.btn-primary.btn-glow:hover {
-    box-shadow: var(--shadow-glow-cyan);
-}
-.btn-primary:disabled {
-    background-color: var(--color-text-dark);
-    border-color: var(--color-text-dark);
-    color: var(--color-bg);
-    cursor: not-allowed;
+
+.btn-primary:hover {
+    background: #fff;
+    box-shadow: 0 0 20px var(--color-primary);
 }
 
 .btn-secondary {
     background: transparent;
-    border-color: var(--color-text-dark);
-    color: var(--color-text-dark);
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
 }
+
 .btn-secondary:hover {
-    border-color: var(--color-text);
-    color: var(--color-text);
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: var(--shadow-red);
 }
 
-/* --- Panel Log --- */
-.log-card {
-    flex-grow: 1; /* Agar panel log mengisi sisa ruang */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(100%);
 }
-.log-content {
-    height: 400px;
-    overflow-y: auto;
+
+/* --- Requirements Panel --- */
+.requirements-panel {
+    border: 1px solid #333;
     background: rgba(0, 0, 0, 0.4);
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    /* Kustomisasi scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) var(--color-bg);
-}
-.log-content::-webkit-scrollbar {
-    width: 8px;
-}
-.log-content::-webkit-scrollbar-track {
-    background: var(--color-bg);
-}
-.log-content::-webkit-scrollbar-thumb {
-    background-color: var(--color-primary);
-    border-radius: 4px;
 }
 
-/* --- Visualisasi Pita --- */
-.tape-container-wrapper {
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) var(--color-bg);
+.panel-header {
+    background: #1a1a1a;
+    padding: 8px 15px;
+    color: var(--color-secondary);
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.tape-container-wrapper::-webkit-scrollbar {
+
+.panel-body {
+    padding: 15px;
+}
+
+.info-text {
+    color: #888;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+}
+
+.req-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.req-list li {
+    color: #666;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.req-list li.valid {
+    color: var(--color-secondary);
+    text-shadow: 0 0 5px var(--color-secondary);
+}
+
+.req-list li.invalid {
+    color: var(--color-danger);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* --- Log Terminal --- */
+.log-card {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+.log-content {
+    flex-grow: 1;
+    background: #000;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding: 15px;
+    overflow-y: auto;
+    border: 1px solid #333;
+    height: 300px;
+    resize: vertical;
+}
+
+/* Scrollbar Custom */
+::-webkit-scrollbar {
+    width: 8px;
     height: 8px;
 }
-.tape-container-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--color-primary);
-    border-radius: 4px;
+::-webkit-scrollbar-track {
+    background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border: 1px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* --- Tape Visualization --- */
+.tape-card {
+    min-height: 150px;
+}
+
+.tape-container-wrapper {
+    overflow-x: auto;
+    padding: 20px 0;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #333;
+    display: flex;
+    justify-content: center; /* Center tape initially */
 }
 
 #tape-container {
     display: flex;
-    flex-direction: row;
-    padding: 10px 0;
-    min-width: min-content; /* Agar bisa discroll */
+    gap: 5px;
+    padding: 0 20px;
 }
-.tape-placeholder {
-    color: var(--color-text-dark);
-    font-style: italic;
-}
+
 .tape-cell {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
+    border: 1px solid #444;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-text-dark);
-    background: rgba(0, 0, 0, 0.2);
-    flex-shrink: 0; /* Mencegah sel menyusut */
-}
-.tape-cell.current {
-    color: var(--color-bg);
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-glow-cyan);
-    transform: scale(1.1);
-    z-index: 10;
+    color: #fff;
+    background: #111;
+    position: relative;
+    transition: 0.2s;
 }
 
-/* --- Panel Hasil --- */
-#result-message {
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    color: var(--color-text-dark);
+/* Head Styling (Kotak Aktif) */
+.tape-cell.current {
+    border-color: var(--color-primary);
+    background: rgba(0, 240, 255, 0.15);
+    box-shadow: 0 0 15px var(--color-primary);
+    transform: scale(1.1);
+    z-index: 2;
+    color: var(--color-primary);
+    font-weight: bold;
 }
+
+/* Head Indicator (Panah Bawah) */
+.tape-cell.current::after {
+    content: '▲';
+    position: absolute;
+    bottom: -18px;
+    font-size: 10px;
+    color: var(--color-primary);
+}
+
+.tape-placeholder {
+    color: #666;
+    font-style: italic;
+    padding: 10px;
+}
+
+.tape-legend {
+    margin-top: 10px;
+    text-align: right;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* --- Result Panel --- */
+.result-card {
+    text-align: center;
+}
+
+#result-message {
+    font-family: var(--font-header);
+    font-size: 1.5rem;
+    padding: 10px;
+}
+
 #result-message.accepted {
     color: var(--color-secondary);
-    text-shadow: var(--shadow-glow-green);
-}
-#result-message.rejected {
-    color: var(--color-danger);
-    text-shadow: var(--shadow-glow-red);
+    border: 1px solid var(--color-secondary);
+    box-shadow: inset 0 0 20px rgba(57, 255, 20, 0.2);
 }
 
-/* --- Overlay Feedback Animasi --- */
+#result-message.rejected {
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+    box-shadow: inset 0 0 20px rgba(255, 0, 85, 0.2);
+}
+
+/* --- Sidebar Panel Info Kelompok --- */
+.group-panel {
+    position: fixed;
+    top: 0;
+    right: -320px; /* Hidden by default */
+    width: 300px;
+    height: 100%;
+    background: rgba(5, 5, 5, 0.95);
+    border-left: 2px solid var(--color-primary);
+    z-index: 2000;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+}
+
+.group-panel.is-open {
+    right: 0;
+}
+
+.panel-close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.panel-content {
+    padding: 40px 20px;
+}
+
+.panel-content h3 {
+    color: var(--color-secondary);
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-family: var(--font-header);
+}
+
+.panel-content p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.team-list {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.team-list li {
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    border-left: 2px solid #333;
+    padding-left: 10px;
+    transition: 0.2s;
+}
+
+.team-list li:hover {
+    border-left-color: var(--color-primary);
+    color: #fff;
+}
+
+.team-list .nim {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+}
+
+.panel-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 0.7rem;
+    color: #555;
+}
+
+/* --- Feedback Overlay (DITERIMA / DITOLAK Fullscreen) --- */
 .feedback-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 10, 15, 0.5);
-    z-index: 1000;
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
     pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(5px);
 }
+
 .feedback-overlay.show {
     opacity: 1;
-    visibility: visible;
+    pointer-events: auto;
 }
+
+.feedback-content {
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feedback-overlay.show .feedback-content {
+    transform: scale(1);
+}
+
+.feedback-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-family: var(--font-header);
+    letter-spacing: 5px;
+}
+
 .feedback-text {
-    font-size: 10vw;
-    font-weight: 600;
-    opacity: 0;
-    transform: scale(0.5);
-    animation: feedback-anim 2.5s ease-out forwards;
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: var(--font-header);
+    text-transform: uppercase;
 }
-.feedback-text.glow-accept {
+
+.glow-accept {
     color: var(--color-secondary);
-    text-shadow: 0 0 10px var(--color-secondary), 0 0 30px var(--color-secondary), 0 0 60px var(--color-secondary);
+    text-shadow: 0 0 20px var(--color-secondary), 0 0 50px var(--color-secondary);
 }
-.feedback-text.glow-reject {
+
+.glow-reject {
     color: var(--color-danger);
-    text-shadow: 0 0 10px var(--color-danger), 0 0 30px var(--color-danger), 0 0 60px var(--color-danger);
+    text-shadow: 0 0 20px var(--color-danger), 0 0 50px var(--color-danger);
 }
 
-@keyframes feedback-anim {
-    0% { opacity: 0; transform: scale(0.5); }
-    20% { opacity: 1; transform: scale(1.1); }
-    40% { opacity: 1; transform: scale(1); }
-    80% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.5); }
+/* --- Animations --- */
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
-/* --- Panel Info Kelompok (Sidebar) --- */
-.group-panel {
-    position: fixed;
-    top: 0;
-    right: -350px; /* Sembunyi di kanan */
-    width: 320px;
-    height: 100%;
-    background: rgba(15, 30, 50, 0.9);
-    backdrop-filter: blur(10px);
-    border-left: 1px solid var(--color-primary);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
-    z-index: 1001;
-    transition: right 0.4s ease-in-out;
-}
-.group-panel.is-open {
-    right: 0; /* Muncul */
-}
-.panel-close-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    color: var(--color-text-dark);
-    font-size: 2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.panel-close-button:hover {
-    color: var(--color-danger);
-    transform: rotate(90deg);
-}
-.group-panel .panel-content {
-    padding: 30px 25px;
-    color: var(--color-text);
-}
-.panel-content h3 {
-    color: var(--color-secondary);
-    border-bottom: 1px solid var(--color-secondary);
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-}
-.panel-content h4 {
-    color: var(--color-primary);
-}
-.team-list {
-    list-style: none;
-    padding-left: 10px;
-}
-.team-list li {
-    margin-bottom: 8px;
-    position: relative;
-}
-.team-list li::before {
-    content: '>';
-    color: var(--color-secondary);
-    position: absolute;
-    left: -15px;
+.blink {
+    animation: blink-animation 1s infinite;
 }
 
-/* --- Media Queries untuk Responsif --- */
+/* --- Responsif --- */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
     .container {
         flex-direction: column;
     }
+    
+    .header-content h1 {
+        font-size: 1.2rem;
+    }
+    
     .column-left, .column-right {
         min-width: 100%;
-    }
-    .log-content {
-        height: 300px;
     }
 }
